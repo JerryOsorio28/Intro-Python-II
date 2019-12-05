@@ -1,6 +1,7 @@
-from room import Room
+from room import Room # Declare all the rooms
+from player import Player
 
-# Declare all the rooms
+# player_name = input('Welcome! Please enter your name ') #<-- Where player initially inputs their name
 
 room = {
     'outside':  Room("Outside Cave Entrance",
@@ -23,7 +24,6 @@ earlier adventurers. The only exit is to the south."""),
 
 
 # Link rooms together
-
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -38,6 +38,8 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+player_1 = Player('Jerry', room['outside'])
+print(player_1)
 
 # Write a loop that:
 #
@@ -49,3 +51,56 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+loop = False #Prevents an infinite loop
+
+while not loop:
+    print('CURRENT PLAYER LOCATION', f"{player_1.current_room.name}")
+
+    #Ask the user what he/she would like to do next
+    option = input("If you are ready, press n to head north into the cave ")
+
+    #User has 4 options, 'n', 's', 'e', 'w' to move the player North, South, East or West.
+    
+    #Checks if player is able to move to an existing room, if there's an existing room, moves player to North, else display's message.
+    if option == 'n':
+        if player_1.current_room.n_to == None:
+            print("You cant go that way!")
+            player_1.current_room
+        else:
+            player_1.current_room = player_1.current_room.n_to
+
+     #Checks if player is able to move to an existing room, if there's an existing room, moves player to South, else display's message.
+    elif option == 's':
+        if player_1.current_room.s_to == None:
+            print("You cant go that way!")
+            player_1.current_room
+        else:
+            player_1.current_room = player_1.current_room.s_to
+
+     #Checks if player is able to move to an existing room, if there's an existing room, moves player to East, else display's message.
+    elif option == 'e':
+        if player_1.current_room.e_to == None:
+            print("You cant go that way!")
+            player_1.current_room
+        else:
+            player_1.current_room = player_1.current_room.e_to
+
+    #Checks if player is able to move to an existing room, if there's an existing room, moves player to West, else display's message.
+    elif option == 'w':
+        if player_1.current_room.w_to == None:
+            print("You cant go that way!")
+            player_1.current_room
+        else:
+            player_1.current_room = player_1.current_room.w_to
+
+    if option == 'q':
+        print('Thanks for playing, goodbye!')
+        break
+
+
+    
+
+        
+
+    
