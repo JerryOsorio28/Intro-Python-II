@@ -36,10 +36,10 @@ room['treasure'].s_to = room['narrow']
 
 #Make a new instance of Item
 items = {
-    'potion': Item('Potion Vial', 'Increases health'),
-    'mana': Item('Mana Bottle', 'Increases mana'),
-    'sword': Item('Sword', 'Rusty sword'),
-    'shield': Item('Shield', 'Rusty shield')
+    'potion': Item('Potion Vial', 'It increases health.'),
+    'mana': Item('Mana Bottle', 'It increases mana.'),
+    'sword': Item('Rusty Sword', "doesn't look too durable but it should do the trick."),
+    'shield': Item('Rusty Shield', "it's broken, but should help to protect yourself.")
 }
 
 # potion = Item('Potion Vial', 'Increases health')
@@ -47,9 +47,12 @@ potion = Item(items['potion'].name, items['potion'].description)
 mana = Item(items['mana'].name, items['mana'].description)
 sword = Item(items['sword'].name, items['sword'].description)
 shield = Item(items['shield'].name, items['shield'].description)
+
+#Links the list of items on each room
 room['foyer'].list.append(potion)
-# print(potion)
-    
+room['overlook'].list.append(sword)    
+room['overlook'].list.append(shield)    
+room['narrow'].list.append(mana)
 
 #
 # Main
@@ -72,13 +75,14 @@ player_1 = Player('Jerry', room['outside'])
 loop = False #Prevents an infinite loop
 
 while not loop:
-    print('PLAYER LOCATION', f"{player_1.current_room.name}")
+    # print('PLAYER LOCATION', f"{player_1.current_room.name}")
     # print('PLAYER LOCATION', f"{'NORTH TO', player_1.current_room.n_to, 'SOUTH TO', player_1.current_room.s_to, 'EAST TO', player_1.current_room.e_to, 'WEST TO', player_1.current_room.w_to}")
 
     #Shows commands available for player
     #User has 4 options, 'n', 's', 'e', 'w' to move the player North, South, East or West.
     print("COMMANDS: 'n': North, 'e': East, 'w': West, 's': South, 'location': Current location, 'search': Search room")
-    print('FOYER ROOM ITEM LIST', room['foyer'].list)
+    # print('FOYER ROOM ITEM LIST', room['foyer'].list)
+    print('OVERLOOK ROOM ITEM LIST', room['overlook'].list)
     print('PLAYER INVENTORY', player_1.inventory)
 
     # print('ARRAY', room['foyer'].list)
@@ -98,10 +102,38 @@ while not loop:
                                     # print('ITS WORKING***', item.name)
                                     if item.name == 'Potion Vial':
                                         room['foyer'].list.remove(item)
-                                        player_1.inventory.append(item)
-                                        print(f'You have picked the {potion}')
-
-                
+                                        player_1.inventory.append(item.name)
+                                        print(f'You have picked the {potion.name}, {potion.description}')
+            elif player_1.current_room.name == 'Grand Overlook':
+                answer = input(f"There's a skeleton, looks it has been there for a while, next to it there's a {sword.name} & a {shield.name}, would you like to take it? ")
+                answer= answer.split()
+                for words in answer:
+                    if len(answer) > 1:
+                        if answer[0] == 'take':
+                            if answer[1] == 'everything':
+                                for item in room['overlook'].list:
+                                    if item.name == 'Rusty Sword':
+                                        room['overlook'].list.remove(item)
+                                        player_1.inventory.append(item.name)
+                                        for item in room['overlook'].list:
+                                        # print('ITS WORKING***', item.name)
+                                            if item.name == 'Rusty Shield':
+                                                room['overlook'].list.remove(item)
+                                                player_1.inventory.append(item.name)
+                                                print(f'You have picked the {sword.name}, {sword.description}. Also the {shield.name}, {shield.description}')
+            elif player_1.current_room.name == 'Narrow Passage':
+                answer = input(f'Searching the room you found a {mana.name}, would you like to take it? ')
+                answer= answer.split()
+                for words in answer:
+                    if len(answer) > 1:
+                        if answer[0] == 'take':
+                            if answer[1] == 'mana':
+                                for item in room['narrow'].list:
+                                    # print('ITS WORKING***', item.name)
+                                    if item.name == 'Mana Bottle':
+                                        room['narrow'].list.remove(item)
+                                        player_1.inventory.append(item.name)
+                                        print(f'You have picked the {potion.name} from the ground. {mana.description}')
     else:
     #Checks if player is able to move to an existing room, if there's an existing room, moves player to North, else display's message.
         if option == 'n':
