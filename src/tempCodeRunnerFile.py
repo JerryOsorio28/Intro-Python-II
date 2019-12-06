@@ -1,8 +1,8 @@
 
-        #     print(f'Searching the room, there is nothing at {player_1.current_room.name}')
-        # elif player_1.current_room.name == 'Outside Cave Entrance':
-        #     print(f'Searching the room, there is nothing at {player_1.current_room.name}')
-        # if player_1.current_room.name == 'Outside Cave Entrance':
-        #     print(f'Searching the room, there is nothing at {player_1.current_room.name}')
-        # if player_1.current_room.name == 'Outside Cave Entrance':
-        #     print(f'Searching the room, there is nothing at {player_1.current_room.name}')
+        #     if word[0] == 'drop':
+        #         if word[1] == 'potion':
+        #         # print('IT WORKS!', answer)
+        #             for item in player_1.inventory:
+        #                 if item.name == 'Potion Vial':
+        #                     player_1.inventory.remove(item)
+        #                     print(f'You have drop the {potion.name}.') 

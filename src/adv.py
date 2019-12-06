@@ -85,6 +85,8 @@ while not loop:
     print('OVERLOOK ROOM ITEM LIST', room['overlook'].list)
     print('PLAYER INVENTORY', player_1.inventory)
 
+    
+
     # print('ARRAY', room['foyer'].list)
 
     #Ask the user what he/she would like to do next
@@ -99,7 +101,6 @@ while not loop:
                         if answer[0] == 'take':
                             if answer[1] == 'potion':
                                 for item in room['foyer'].list:
-                                    # print('ITS WORKING***', item.name)
                                     if item.name == 'Potion Vial':
                                         room['foyer'].list.remove(item)
                                         player_1.inventory.append(item.name)
@@ -175,12 +176,15 @@ while not loop:
         elif option == 'location':
             print(f'Your current location is {player_1.current_room}')
 
-        #Prints an error of players types an invalid character(s)
-        # elif len(option) > 1 and option != 'location' and option != 'search':
-        #     print('Invalid characters! Choose n/s/w/e to move your player.')
-        
-            # elif player_1.current_room.name == 'Foyer':
-            #     print(f'Searching the room, you found  {player_1.current_room.name}')
+        # for word in option:
+        #     if word[0] == 'drop':
+        #         if word[1] == 'potion':
+        # # print('IT WORKS!', answer)
+        #             for item in player_1.inventory:
+        #                 if item.name == 'Potion Vial':
+        #                     player_1.inventory.remove(item)
+        #                     print(f'You have drop the {potion.name}.') 
+
 
         if option == 'q':
             print('Thanks for playing, goodbye!')
