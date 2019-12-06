@@ -3,8 +3,9 @@
 class Player:
     def __init__(self, name, current_room):
         self.name = name
+        self.inventory = []
         self.current_room = current_room 
     def __str__(self):
-        return "{}'s location is {}".format(self.name, self.current_room)
+        return f"{self.name}'s location is {self.current_room}"
 # player = Player('Jerry', 'outside')
 # print(player)

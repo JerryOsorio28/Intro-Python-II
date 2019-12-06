@@ -1,5 +1,6 @@
 from room import Room # Declare all the rooms
 from player import Player
+from item import Item
 
 # player_name = input('Welcome! Please enter your name ') #<-- Where player initially inputs their name
 
@@ -33,13 +34,29 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+#Make a new instance of Item
+items = {
+    'potion': Item('Potion Vial', 'Increases health'),
+    'mana': Item('Mana Bottle', 'Increases mana'),
+    'sword': Item('Sword', 'Rusty sword'),
+    'shield': Item('Shield', 'Rusty shield')
+}
+
+# potion = Item('Potion Vial', 'Increases health')
+potion = Item(items['potion'].name, items['potion'].description)
+mana = Item(items['mana'].name, items['mana'].description)
+sword = Item(items['sword'].name, items['sword'].description)
+shield = Item(items['shield'].name, items['shield'].description)
+room['foyer'].list.append(potion)
+# print(potion)
+    
+
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
 player_1 = Player('Jerry', room['outside'])
-print(player_1)
 
 # Write a loop that:
 #
@@ -55,51 +72,87 @@ print(player_1)
 loop = False #Prevents an infinite loop
 
 while not loop:
-    print('CURRENT PLAYER LOCATION', f"{player_1.current_room.name}")
+    print('PLAYER LOCATION', f"{player_1.current_room.name}")
+    # print('PLAYER LOCATION', f"{'NORTH TO', player_1.current_room.n_to, 'SOUTH TO', player_1.current_room.s_to, 'EAST TO', player_1.current_room.e_to, 'WEST TO', player_1.current_room.w_to}")
+
+    #Shows commands available for player
+    #User has 4 options, 'n', 's', 'e', 'w' to move the player North, South, East or West.
+    print("COMMANDS: 'n': North, 'e': East, 'w': West, 's': South, 'location': Current location, 'search': Search room")
+    print('FOYER ROOM ITEM LIST', room['foyer'].list)
+    print('PLAYER INVENTORY', player_1.inventory)
+
+    # print('ARRAY', room['foyer'].list)
 
     #Ask the user what he/she would like to do next
-    option = input("If you are ready, press n to head north into the cave ")
+    option = input("Where would you like to go ")
 
-    #User has 4 options, 'n', 's', 'e', 'w' to move the player North, South, East or West.
-    
+    if option == 'search':
+            if player_1.current_room.name == 'Foyer':
+                answer = input(f'Searching the room you found a {potion.name}, would you like to take it? ')
+                answer= answer.split()
+                for words in answer:
+                    if len(answer) > 1:
+                        if answer[0] == 'take':
+                            if answer[1] == 'potion':
+                                for item in room['foyer'].list:
+                                    # print('ITS WORKING***', item.name)
+                                    if item.name == 'Potion Vial':
+                                        room['foyer'].list.remove(item)
+                                        player_1.inventory.append(item)
+                                        print(f'You have picked the {potion}')
+
+                
+    else:
     #Checks if player is able to move to an existing room, if there's an existing room, moves player to North, else display's message.
-    if option == 'n':
-        if player_1.current_room.n_to == None:
-            print("You cant go that way!")
-            player_1.current_room
-        else:
-            player_1.current_room = player_1.current_room.n_to
+        if option == 'n':
+            print(player_1.current_room.n_to)
+            if player_1.current_room.n_to is None:
+                print("You cant go that way!")
+                player_1.current_room
+            else:
+                player_1.current_room = player_1.current_room.n_to
 
-     #Checks if player is able to move to an existing room, if there's an existing room, moves player to South, else display's message.
-    elif option == 's':
-        if player_1.current_room.s_to == None:
-            print("You cant go that way!")
-            player_1.current_room
-        else:
-            player_1.current_room = player_1.current_room.s_to
+        #Checks if player is able to move to an existing room, if there's an existing room, moves player to South, else display's message.
+        elif option == 's':
+            print(player_1.current_room.s_to)
+            if player_1.current_room.s_to is None:
+                print("You cant go that way!")
+                player_1.current_room
+            else:
+                player_1.current_room = player_1.current_room.s_to
 
-     #Checks if player is able to move to an existing room, if there's an existing room, moves player to East, else display's message.
-    elif option == 'e':
-        if player_1.current_room.e_to == None:
-            print("You cant go that way!")
-            player_1.current_room
-        else:
-            player_1.current_room = player_1.current_room.e_to
+        #Checks if player is able to move to an existing room, if there's an existing room, moves player to East, else display's message.
+        elif option == 'e':
+            print(player_1.current_room.e_to)
+            if player_1.current_room.e_to is None:
+                print("You cant go that way!")
+                player_1.current_room
+            else:
+                player_1.current_room = player_1.current_room.e_to
 
-    #Checks if player is able to move to an existing room, if there's an existing room, moves player to West, else display's message.
-    elif option == 'w':
-        if player_1.current_room.w_to == None:
-            print("You cant go that way!")
-            player_1.current_room
-        else:
-            player_1.current_room = player_1.current_room.w_to
+        #Checks if player is able to move to an existing room, if there's an existing room, moves player to West, else display's message.
+        elif option == 'w':
+            print(player_1.current_room.w_to)
+            if player_1.current_room.w_to is None:
+                print("You cant go that way!")
+                player_1.current_room
+            else:
+                player_1.current_room = player_1.current_room.w_to
 
-    if option == 'q':
-        print('Thanks for playing, goodbye!')
-        break
+        #Prints player's current location
+        elif option == 'location':
+            print(f'Your current location is {player_1.current_room}')
 
+        #Prints an error of players types an invalid character(s)
+        # elif len(option) > 1 and option != 'location' and option != 'search':
+        #     print('Invalid characters! Choose n/s/w/e to move your player.')
+        
+            # elif player_1.current_room.name == 'Foyer':
+            #     print(f'Searching the room, you found  {player_1.current_room.name}')
 
-    
+        if option == 'q':
+            print('Thanks for playing, goodbye!')
+            break
 
         
 
