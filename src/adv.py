@@ -22,8 +22,6 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
-# print('rooms', room.keys())
-
 # Link rooms together
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -34,7 +32,7 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-# Items
+# Items in the game
 items = {
     'torch': Items('torch'),
     'shield': Items('shield'),
@@ -44,33 +42,28 @@ items = {
 
 #Places items in rooms
 room['foyer'].items.append(str(items['torch']))
-room['overlook'].items.append(items['shield'])
-room['narrow'].items.append(items['sword'])
-room['treasure'].items.append(items['coin'])
-
-# if room:
-#     print(True)
-# else:
-#     print(False)
+room['overlook'].items.append(str(items['shield']))
+room['narrow'].items.append(str(items['sword']))
+# room['treasure'].items.append(str(items['coin']))
 
 # Make a new player object that is currently in the 'outside' room.
 player_1 = Player('Jerry', room['outside'])
 
-# Write a loop that:
+# Write a loop that as long as it is True, the game will run, else quits the game
 game_on = True
 
 name = input('Welcome Traveler! Tell me, what is your name? ')
-text = input(f'{name}, are you ready for a great yet mysterious adventure? (yes/no) ')
-print(f'Good luck traveler... You are currently {player_1.current_room}')
+text = input(f'{name}... interesting. Well {name}! are you ready for a great yet mysterious adventure? (yes/no) ')
+print(f'Good luck traveler... \n You are currently {player_1.current_room}')
 
 while game_on:
-    print('player location**', player_1.current_room.name)
-    print('player current room items', player_1.current_room.items)
-    print('player inventory', player_1.inventory)
-    respond = input('Where would you like to go now? (You can move by typing n, s, w, e) ')
+    print("Type 'help' if you need assistance")
+    respond = input('Where would you like to go now? ')
     if(text == 'yes'):
         if(respond == 'n'):
+            # checks first if there is an existing room where the player wants to go
             if(player_1.current_room.n_to != None):
+                # if there is the player is moved to the room on that direction
                 player_1.current_room = player_1.current_room.n_to
                 print(f'You have enter The {player_1.current_room}')
             else:
@@ -94,29 +87,49 @@ while game_on:
             else:
                 print('There is nowhere to go that way!')
         if(respond == 'search'):
+            # when searching for items, it checks if there is any items in the room first
             if(player_1.current_room.items):
-                respond = input(f'There is a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no) ')
+                # if there is, prompts the player what he wants to do with it
+                respond = input(f'Searching the room, You have found a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no) ')
+                # for two or more words, it splits the string
                 split_respond = respond.split(' ')
                 if(split_respond[0] == 'grab'):
+                    # it checks if there is such item in the room first
                     if(player_1.current_room.items.count(split_respond[1])):
+                        # if there is, adds item to player inventory
                         player_1.inventory.append(split_respond[1])
+                        # runs the method to display which items was picked up.
                         items[split_respond[1]].on_take()
+                        # removes item from the room
                         player_1.current_room.items.remove(split_respond[1])
-                    else:
-                        print('if statement is not running')
+                elif(split_respond[0] == 'no'):
+                    print('It will be very difficult to see your way in the dark...')
                 else:
-                    print('You will not be able to see your way in the dark')
+                    print('The value you typed is incorrect')
             else:
                 print('There is nothing in this room')
         elif(respond == 'drop'):
-            respond = input(f'What item would you like to drop? {player_1.inventory}' )
+            respond = input(f'What item would you like to drop? {player_1.inventory} ' )
             if(player_1.inventory.count(respond)):
                 items[respond].on_drop()
                 player_1.inventory.remove(respond)
                 player_1.current_room.items.append(str(items[respond]))
             else:
                 print(f'You do not have {respond} or {respond} is an invalid input')
-
+        elif(respond == 'q'):
+            print(f'I understand {name}, come back whenever you feel ready, goodbye.')
+            game_on = False
+        elif(respond == 'inventory'):
+            print(f'Inventory there is {len(player_1.inventory)} amount of items in your inventory. {player_1.inventory}')
+        elif(respond == 'help'):
+            print('''
+            You can move by typing 'n' to go north, 's' to go south, 'w' to go west and 'e' to go east.
+            You can type 'search' to search the area for items
+            You can type 'drop' to drop an item of your choice if you have it in your inventory.
+            You can type 'inventory' to check what you currently have in your inventory.
+            ''')
+        else:
+            print('The value you typed is incorrect')
     elif(text == 'no'):
         print(f'I understand {name}, come back whenever you feel ready, goodbye.')
         game_on = False
