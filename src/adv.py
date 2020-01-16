@@ -22,6 +22,8 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+print('rooms', room.keys())
+
 # Link rooms together
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -41,14 +43,18 @@ items = {
 }
 
 #Places items in rooms
-room['foyer'].items = items['torch']
-room['overlook'].items = items['shield']
-room['narrow'].items = items['sword']
-room['treasure'].items = items['coin']
+room['foyer'].items.append(str(items['torch']))
+room['overlook'].items.append(items['shield'])
+room['narrow'].items.append(items['sword'])
+room['treasure'].items.append(items['coin'])
 
+# if room:
+#     print(True)
+# else:
+#     print(False)
 
 # Make a new player object that is currently in the 'outside' room.
-player_1 = Player('James', room['outside'])
+player_1 = Player('Jerry', room['outside'])
 
 # Write a loop that:
 game_on = True
@@ -58,6 +64,8 @@ text = input(f'{name}, are you ready for a great yet mysterious adventure? (yes/
 print(f'Good luck traveler... You are currently {player_1.current_room}')
 
 while game_on:
+    print('player location**', player_1.current_room.name)
+    print('player inventory', player_1.inventory)
     respond = input('Where would you like to go now? (You can move by typing n, s, w, e) ')
     if(text == 'yes'):
         if(respond == 'n'):
@@ -89,7 +97,15 @@ while game_on:
                 respond = input(f'There is a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no) ')
                 split_respond = respond.split(' ')
                 if(split_respond[0] == 'grab'):
-                    items[str(player_1.current_room.items)].on_take()
+                    if(player_1.current_room.items.count(split_respond[1])):
+                        # pass
+                        player_1.inventory.append(split_respond[1])
+                        items[split_respond[1]].on_take()
+                        # room['foyer'].items.remove(split_respond[1])
+                        player_1.current_room.items.remove(split_respond[1])
+                        print('room items', player_1.current_room.items)
+                    else:
+                        print('if statement is not running')
                 else:
                     print('You will not be able to see your way in the dark')
             else:

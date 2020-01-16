@@ -4,6 +4,9 @@ class Items:
 
     def on_take(self):
         print(f'You picked a {self.name}')
+
+    def drop(self):
+        print(f'You have dropped the {self.name}')
     
     def __repr__(self):
         return f'{self.name}'
