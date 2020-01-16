@@ -3,7 +3,7 @@ class Items:
         self.name = name
 
     def on_take(self):
-        return f'You picked the {self.name}'
+        print(f'You picked a {self.name}')
     
     def __repr__(self):
         return f'{self.name}'

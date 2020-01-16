@@ -33,26 +33,22 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 # Items
-items = [
-    Items('Torch'),
-    Items('Rusty Shield'),
-    Items('Rusty Sword'),
-    Items('Coin')
-]
+items = {
+    'torch': Items('torch'),
+    'shield': Items('shield'),
+    'sword': Items('sword'),
+    'coin': Items('coin')
+}
 
 #Places items in rooms
-room['foyer'].items = items[0]
-room['overlook'].items = items[1]
-room['narrow'].items = items[2]
-room['treasure'].items = items[3]
+room['foyer'].items = items['torch']
+room['overlook'].items = items['shield']
+room['narrow'].items = items['sword']
+room['treasure'].items = items['coin']
 
 
 # Make a new player object that is currently in the 'outside' room.
 player_1 = Player('James', room['outside'])
-
-for i in items:
-    print(i)
-
 
 # Write a loop that:
 game_on = True
@@ -90,7 +86,12 @@ while game_on:
                 print('There is nowhere to go that way!')
         if(respond == 'search'):
             if(player_1.current_room.items):
-                respond = input(f'There is a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no)')
+                respond = input(f'There is a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no) ')
+                split_respond = respond.split(' ')
+                if(split_respond[0] == 'grab'):
+                    items[str(player_1.current_room.items)].on_take()
+                else:
+                    print('You will not be able to see your way in the dark')
             else:
                 print('There is nothing in this room')     
     elif(text == 'no'):
