@@ -33,52 +33,69 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 # Items
-items = {
-    'torch': Items('Torch'),
-    'sword': Items('Sword'),
-    'shield': Items('Rusty Shield'),
-    'sword': Items('Rusty Sword')
-}
+items = [
+    Items('Torch'),
+    Items('Rusty Shield'),
+    Items('Rusty Sword'),
+    Items('Coin')
+]
 
+#Places items in rooms
+room['foyer'].items = items[0]
+room['overlook'].items = items[1]
+room['narrow'].items = items[2]
+room['treasure'].items = items[3]
 
 
 # Make a new player object that is currently in the 'outside' room.
-player_1 = Player('James', room['outside'], [])
+player_1 = Player('James', room['outside'])
+
+for i in items:
+    print(i)
 
 
 # Write a loop that:
-# game_on = True
+game_on = True
 
-# name = input('Welcome Traveler! Tell me, what is your name? ')
+name = input('Welcome Traveler! Tell me, what is your name? ')
+text = input(f'{name}, are you ready for a great yet mysterious adventure? (yes/no) ')
+print(f'Good luck traveler... You are currently {player_1.current_room}')
 
-# while game_on:
-#     text = input(f'{name}, are you ready for a great yet mysterious adventure? (yes/no) ')
-
-#     if(text == 'yes'):
-#         print(f'Good luck traveler... You are currently {player_1.current_room}')
-#         respond = input('Where would you like to go now? (You can move by typing n, s, w, e) ')
-#         if(respond == 'n'):
-#             if(player_1.current_room.n_to != None):
-#                 player_1.current_room = player_1.current_room.n_to
-#                 respond = input(f'We are finally in... The {player_1.current_room}, It is dark.. but there is a lit torch in the wall, would you like to grab it? (yes / no) ')
-#                 if(respond == 'yes'):
-#                     pass
-#                 elif(respond == 'no'):
-#                     print("You won't be able to see anything as you explore the cave")
-#                 else:
-#                     print('The value you typed is incorrect, choose one of the following: "yes" / "no" ')
-#             else:
-#                 print('There is nowhere to go that way!')
-#         if(respond == 's'):
-#             pass
-#         if(respond == 'w'):
-#             pass
-#         if(respond == 'e'):
-#             pass
-        
-#     elif(text == 'no'):
-#         print(f'I understand {name}, come back whenever you feel ready, goodbye.')
-#         game_on = False
-#     else:
-#         print('The value you typed is incorrect, choose one of the following: "yes" / "no"')
+while game_on:
+    respond = input('Where would you like to go now? (You can move by typing n, s, w, e) ')
+    if(text == 'yes'):
+        if(respond == 'n'):
+            if(player_1.current_room.n_to != None):
+                player_1.current_room = player_1.current_room.n_to
+                print(f'You have enter The {player_1.current_room}')
+            else:
+                print('There is nowhere to go that way!')
+        if(respond == 's'):
+            if(player_1.current_room.s_to != None):
+                player_1.current_room = player_1.current_room.s_to
+                print(f' You are currently at {player_1.current_room}')
+            else:
+                print('There is nowhere to go that way!')
+        if(respond == 'w'):
+            if(player_1.current_room.w_to != None):
+                player_1.current_room = player_1.current_room.w_to
+                print(f' You are currently at {player_1.current_room}')
+            else:
+                print('There is nowhere to go that way!')
+        if(respond == 'e'):
+            if(player_1.current_room.e_to != None):
+                player_1.current_room = player_1.current_room.e_to
+                print(f' You are currently at {player_1.current_room}')
+            else:
+                print('There is nowhere to go that way!')
+        if(respond == 'search'):
+            if(player_1.current_room.items):
+                respond = input(f'There is a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no)')
+            else:
+                print('There is nothing in this room')     
+    elif(text == 'no'):
+        print(f'I understand {name}, come back whenever you feel ready, goodbye.')
+        game_on = False
+    else:
+        print('The value you typed is incorrect, choose one of the following: "yes" / "no"')
 
