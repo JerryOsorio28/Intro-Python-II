@@ -1,25 +1,19 @@
 from room import Room
 from player import Player
 from items import Items
+from enemies import Enemies
 
 # Declare all the rooms
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'outside':  Room("Outside Cave Entrance", "North of you, the cave mount beckons"),
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east."""),
+    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty passages run north and east."""),
 
-    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
-into the darkness. Ahead to the north, a light flickers in
-the distance, but there is no way across the chasm."""),
+    'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling into the darkness. \n Ahead to the north, a light flickers in the distance, but there is no way across the chasm."""),
 
-    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air."""),
+    'narrow':   Room("Narrow Passage", """The narrow passage bends here from west to north. The smell of gold permeates the air."""),
 
-    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
-chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+    'treasure': Room("Treasure Chamber", """You've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south."""),
 }
 
 # Link rooms together
@@ -34,17 +28,35 @@ room['treasure'].s_to = room['narrow']
 
 # Items in the game
 items = {
-    'torch': Items('torch'),
-    'shield': Items('shield'),
-    'sword': Items('sword'),
-    'coin': Items('coin')
+    'torch': Items('torch', 0),
+    'shield': Items('shield', 0),
+    'sword': Items('sword', 20),
+    'rock': Items('rock', 10)
+    # 'coin': Items('coin')
 }
 
 #Places items in rooms
-room['foyer'].items.append(str(items['torch']))
+room['foyer'].items.append(str(items['sword']))
 room['overlook'].items.append(str(items['shield']))
-room['narrow'].items.append(str(items['sword']))
+room['narrow'].items.append(str(items['torch']))
+room['foyer'].items.append(str(items['rock']))
+room['overlook'].items.append(str(items['rock']))
+room['narrow'].items.append(str(items['rock']))
 # room['treasure'].items.append(str(items['coin']))
+
+# Enemies in the game
+enemies = {
+    'goblin_1': Enemies('goblin'),
+    'goblin_2': Enemies('goblin'),
+    'goblin_3': Enemies('goblin')
+}
+
+# Placing enemies in rooms
+room['overlook'].enemies.append(enemies['goblin_1'])
+room['narrow'].enemies.append(enemies['goblin_2'])
+room['treasure'].enemies.append(enemies['goblin_3'])
+
+# print('enemies in overlook', room['overlook'].enemies)
 
 # Make a new player object that is currently in the 'outside' room.
 player_1 = Player('Jerry', room['outside'])
@@ -66,26 +78,46 @@ while game_on:
                 # if there is the player is moved to the room on that direction
                 player_1.current_room = player_1.current_room.n_to
                 print(f'You have enter The {player_1.current_room}')
+                if(len(player_1.current_room.enemies) > 0):
+                    for enemy in player_1.current_room.enemies:
+                        print('Watch out! You have encounter a goblin! Attack if you have a weapon, if not, is best to retreat!')
+                        while (enemy.dead == False):
+                            respond = input('What do you want to do? (attack / retreat) ')
+                            if(respond == 'attack'):
+                                enemy.health = enemy.health - player_1.attack
+                                if(enemy.health > 0):
+                                    print(f'You have attacked the {enemy.name}, dealing {player_1.attack} of damage, enemy health: {enemy.health}')
+                                    player_1.health = player_1.health - enemy.attack
+                                    print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                else:
+                                    print(f'You have killed the {enemy.name}.. It seems you are not in any danger... for now.')
+                                    player_1.current_room.enemies.remove(enemy)
+                                    enemy.dead = True
+                            elif(respond == 'retreat'):
+                                player_1.current_room = player_1.current_room.s_to
+                                print('You have escaped... for now.')
+                                break
+
             else:
-                print('There is nowhere to go that way!')
+                print('You cannot go that way!')
         if(respond == 's'):
             if(player_1.current_room.s_to != None):
                 player_1.current_room = player_1.current_room.s_to
                 print(f' You are currently at {player_1.current_room}')
             else:
-                print('There is nowhere to go that way!')
+                print('You cannot go that way!')
         if(respond == 'w'):
             if(player_1.current_room.w_to != None):
                 player_1.current_room = player_1.current_room.w_to
                 print(f' You are currently at {player_1.current_room}')
             else:
-                print('There is nowhere to go that way!')
+                print('You cannot go that way!')
         if(respond == 'e'):
             if(player_1.current_room.e_to != None):
                 player_1.current_room = player_1.current_room.e_to
                 print(f' You are currently at {player_1.current_room}')
             else:
-                print('There is nowhere to go that way!')
+                print('You cannot go that way!')
         if(respond == 'search'):
             # when searching for items, it checks if there is any items in the room first
             if(player_1.current_room.items):
@@ -98,40 +130,56 @@ while game_on:
                     if(player_1.current_room.items.count(split_respond[1])):
                         # if there is, adds item to player inventory
                         player_1.inventory.append(split_respond[1])
+                        # increases player's attack when picking up sword
+                        if(split_respond[1] == 'sword'):
+                            player_1.attack = player_1.attack + items[split_respond[1]].attack
+
+
                         # runs the method to display which items was picked up.
                         items[split_respond[1]].on_take()
                         # removes item from the room
                         player_1.current_room.items.remove(split_respond[1])
-                elif(split_respond[0] == 'no'):
-                    print('It will be very difficult to see your way in the dark...')
+                # elif(split_respond[0] == 'no'):
+                #     print('It will be very difficult to see your way in the dark...')
                 else:
                     print('The value you typed is incorrect')
             else:
                 print('There is nothing in this room')
+        # if the player types drop, it will be prompted what item he wants to drop from inventory 
         elif(respond == 'drop'):
             respond = input(f'What item would you like to drop? {player_1.inventory} ' )
+            # check if response is in his inventory
             if(player_1.inventory.count(respond)):
+                # runs the on_drop method
                 items[respond].on_drop()
+                # removes item from player's inventory
                 player_1.inventory.remove(respond)
+                # adds item to the room
                 player_1.current_room.items.append(str(items[respond]))
             else:
                 print(f'You do not have {respond} or {respond} is an invalid input')
+        # if player types 'q', it will quit the game
         elif(respond == 'q'):
             print(f'I understand {name}, come back whenever you feel ready, goodbye.')
             game_on = False
+        # if player types 'inventory', it will show info of inventory
         elif(respond == 'inventory'):
             print(f'Inventory there is {len(player_1.inventory)} amount of items in your inventory. {player_1.inventory}')
+        elif(respond == 'location'):
+            print(f'Your location is {player_1.current_room.name}')
+        #  provides options for player to use
         elif(respond == 'help'):
             print('''
             You can move by typing 'n' to go north, 's' to go south, 'w' to go west and 'e' to go east.
             You can type 'search' to search the area for items
             You can type 'drop' to drop an item of your choice if you have it in your inventory.
             You can type 'inventory' to check what you currently have in your inventory.
+            You can type 'location' if you want to confirm where you are.
             ''')
-        else:
-            print('The value you typed is incorrect')
+        # else:
+        #     print('The value you typed is incorrect???????????')
     elif(text == 'no'):
-        print(f'I understand {name}, come back whenever you feel ready, goodbye.')
+        print(f'I understand {name}, come back whenever you feel ready, goodbye!')
         game_on = False
     else:
         print('The value you typed is incorrect, choose one of the following: "yes" / "no"')
