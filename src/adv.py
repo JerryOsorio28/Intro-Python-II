@@ -45,8 +45,6 @@ items = {
 # Make a new player object that is currently in the 'outside' room.
 player_1 = Player('James', room['outside'], [])
 
-print(items[])
-
 
 # Write a loop that:
 # game_on = True
