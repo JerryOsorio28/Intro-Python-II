@@ -22,7 +22,7 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
-print('rooms', room.keys())
+# print('rooms', room.keys())
 
 # Link rooms together
 room['outside'].n_to = room['foyer']
@@ -65,6 +65,7 @@ print(f'Good luck traveler... You are currently {player_1.current_room}')
 
 while game_on:
     print('player location**', player_1.current_room.name)
+    print('player current room items', player_1.current_room.items)
     print('player inventory', player_1.inventory)
     respond = input('Where would you like to go now? (You can move by typing n, s, w, e) ')
     if(text == 'yes'):
@@ -98,18 +99,24 @@ while game_on:
                 split_respond = respond.split(' ')
                 if(split_respond[0] == 'grab'):
                     if(player_1.current_room.items.count(split_respond[1])):
-                        # pass
                         player_1.inventory.append(split_respond[1])
                         items[split_respond[1]].on_take()
-                        # room['foyer'].items.remove(split_respond[1])
                         player_1.current_room.items.remove(split_respond[1])
-                        print('room items', player_1.current_room.items)
                     else:
                         print('if statement is not running')
                 else:
                     print('You will not be able to see your way in the dark')
             else:
-                print('There is nothing in this room')     
+                print('There is nothing in this room')
+        elif(respond == 'drop'):
+            respond = input(f'What item would you like to drop? {player_1.inventory}' )
+            if(player_1.inventory.count(respond)):
+                items[respond].on_drop()
+                player_1.inventory.remove(respond)
+                player_1.current_room.items.append(str(items[respond]))
+            else:
+                print(f'You do not have {respond} or {respond} is an invalid input')
+
     elif(text == 'no'):
         print(f'I understand {name}, come back whenever you feel ready, goodbye.')
         game_on = False

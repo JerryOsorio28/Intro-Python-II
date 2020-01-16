@@ -5,7 +5,7 @@ class Items:
     def on_take(self):
         print(f'You picked a {self.name}')
 
-    def drop(self):
+    def on_drop(self):
         print(f'You have dropped the {self.name}')
     
     def __repr__(self):
