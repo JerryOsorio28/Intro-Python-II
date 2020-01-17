@@ -1,6 +1,6 @@
 from room import Room
 from player import Player
-from items import Items
+from items import Items, Potion
 from enemies import Enemies
 
 # Declare all the rooms
@@ -31,6 +31,8 @@ items = {
     'torch': Items('torch', 0),
     'shield': Items('shield', 0),
     'sword': Items('sword', 20),
+    'potion': Potion('potion', 30),
+    'rock': Items('rock', 10),
     'rock': Items('rock', 10)
     # 'coin': Items('coin')
 }
@@ -39,6 +41,7 @@ items = {
 room['foyer'].items.append(str(items['sword']))
 room['overlook'].items.append(str(items['shield']))
 room['narrow'].items.append(str(items['torch']))
+room['narrow'].items.append(items['potion'])
 room['foyer'].items.append(str(items['rock']))
 room['overlook'].items.append(str(items['rock']))
 room['narrow'].items.append(str(items['rock']))
@@ -91,6 +94,7 @@ while game_on:
                                 if(enemy.health > 0):
                                     player_1.health = player_1.health - enemy.attack
                                     print(f'You have attacked the {enemy.name}, dealing {player_1.attack} of damage, enemy health: {enemy.health}')
+                                    # checks if the health of player has not fully deplete yet, if it did, it's game over.
                                     if(player_1.health <= 0):
                                         print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
                                         print(f'The {enemy.name} has killed you, game over.')
@@ -116,18 +120,114 @@ while game_on:
             if(player_1.current_room.s_to != None):
                 player_1.current_room = player_1.current_room.s_to
                 print(f' You are currently at {player_1.current_room}')
+                # check if there is any enemies in the current room
+                if(len(player_1.current_room.enemies) > 0):
+                    for enemy in player_1.current_room.enemies:
+                        print(f'Watch out! You have encounter a {enemy.name} Attack if you have a weapon, if not, is best to retreat!')
+                        # this check as long as the enemy is still alive
+                        while (enemy.dead == False):
+                            respond = input('What do you want to do? (attack / retreat) ')
+                            # if player decided to attack, it will calculate the damage done to the enemy by subtracting the player's current attack power from the health of the enemy
+                            if(respond == 'attack'):
+                                enemy.health = enemy.health - player_1.attack
+                                if(enemy.health > 0):
+                                    player_1.health = player_1.health - enemy.attack
+                                    print(f'You have attacked the {enemy.name}, dealing {player_1.attack} of damage, enemy health: {enemy.health}')
+                                    # checks if the health of player has not fully deplete yet, if it did, it's game over.
+                                    if(player_1.health <= 0):
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                        print(f'The {enemy.name} has killed you, game over.')
+                                        game_on = False
+                                        break
+                                    else:
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                else:
+                                    print(f'You have killed the {enemy.name}.. It seems you are not in any danger... for now.')
+                                    # removes the enemy from the room
+                                    player_1.current_room.enemies.remove(enemy)
+                                    # breaks out of the while loop
+                                    enemy.dead = True
+                            # if the player decides to retreat, it will take it back to the previous room and break the while loop
+                            elif(respond == 'retreat'):
+                                player_1.current_room = player_1.current_room.s_to
+                                print('You have escaped... for now.')
+                                break
             else:
                 print('You cannot go that way!')
         if(respond == 'w'):
             if(player_1.current_room.w_to != None):
                 player_1.current_room = player_1.current_room.w_to
                 print(f' You are currently at {player_1.current_room}')
+                # check if there is any enemies in the current room
+                if(len(player_1.current_room.enemies) > 0):
+                    for enemy in player_1.current_room.enemies:
+                        print(f'Watch out! You have encounter a {enemy.name} Attack if you have a weapon, if not, is best to retreat!')
+                        # this check as long as the enemy is still alive
+                        while (enemy.dead == False):
+                            respond = input('What do you want to do? (attack / retreat) ')
+                            # if player decided to attack, it will calculate the damage done to the enemy by subtracting the player's current attack power from the health of the enemy
+                            if(respond == 'attack'):
+                                enemy.health = enemy.health - player_1.attack
+                                if(enemy.health > 0):
+                                    player_1.health = player_1.health - enemy.attack
+                                    print(f'You have attacked the {enemy.name}, dealing {player_1.attack} of damage, enemy health: {enemy.health}')
+                                    # checks if the health of player has not fully deplete yet, if it did, it's game over.
+                                    if(player_1.health <= 0):
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                        print(f'The {enemy.name} has killed you, game over.')
+                                        game_on = False
+                                        break
+                                    else:
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                else:
+                                    print(f'You have killed the {enemy.name}.. It seems you are not in any danger... for now.')
+                                    # removes the enemy from the room
+                                    player_1.current_room.enemies.remove(enemy)
+                                    # breaks out of the while loop
+                                    enemy.dead = True
+                            # if the player decides to retreat, it will take it back to the previous room and break the while loop
+                            elif(respond == 'retreat'):
+                                player_1.current_room = player_1.current_room.s_to
+                                print('You have escaped... for now.')
+                                break
             else:
                 print('You cannot go that way!')
         if(respond == 'e'):
             if(player_1.current_room.e_to != None):
                 player_1.current_room = player_1.current_room.e_to
                 print(f' You are currently at {player_1.current_room}')
+                # check if there is any enemies in the current room
+                if(len(player_1.current_room.enemies) > 0):
+                    for enemy in player_1.current_room.enemies:
+                        print(f'Watch out! You have encounter a {enemy.name} Attack if you have a weapon, if not, is best to retreat!')
+                        # this check as long as the enemy is still alive
+                        while (enemy.dead == False):
+                            respond = input('What do you want to do? (attack / retreat) ')
+                            # if player decided to attack, it will calculate the damage done to the enemy by subtracting the player's current attack power from the health of the enemy
+                            if(respond == 'attack'):
+                                enemy.health = enemy.health - player_1.attack
+                                if(enemy.health > 0):
+                                    player_1.health = player_1.health - enemy.attack
+                                    print(f'You have attacked the {enemy.name}, dealing {player_1.attack} of damage, enemy health: {enemy.health}')
+                                    # checks if the health of player has not fully deplete yet, if it did, it's game over.
+                                    if(player_1.health <= 0):
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                        print(f'The {enemy.name} has killed you, game over.')
+                                        game_on = False
+                                        break
+                                    else:
+                                        print(f'Enemy has attacked, dealing {enemy.attack} damage, your health now is {player_1.health}')
+                                else:
+                                    print(f'You have killed the {enemy.name}.. It seems you are not in any danger... for now.')
+                                    # removes the enemy from the room
+                                    player_1.current_room.enemies.remove(enemy)
+                                    # breaks out of the while loop
+                                    enemy.dead = True
+                            # if the player decides to retreat, it will take it back to the previous room and break the while loop
+                            elif(respond == 'retreat'):
+                                player_1.current_room = player_1.current_room.s_to
+                                print('You have escaped... for now.')
+                                break
             else:
                 print('You cannot go that way!')
         if(respond == 'search'):
@@ -144,8 +244,11 @@ while game_on:
                         player_1.inventory.append(split_respond[1])
                         # increases player's attack when picking up sword
                         if(split_respond[1] == 'sword'):
-                            player_1.attack = player_1.attack + items[split_respond[1]].attack
+                            player_1.attack += items[split_respond[1]].attack
+                        elif(split_respond[1] == 'potion'):
+                            player_1.health += items[split_respond[1]].health 
 
+##IN THE FUTURE, MORE ADVANCE FEATURES LIKE ARMOR, SHIELD, HELMET, MANA.. WHEN PICKED UP, THE EFFECT THAT HAS ON THE CHARACTER CAN BE ADDED HERE##
 
                         # runs the method to display which items was picked up.
                         items[split_respond[1]].on_take()
@@ -177,8 +280,12 @@ while game_on:
         # if player types 'inventory', it will show info of inventory
         elif(respond == 'inventory'):
             print(f'Inventory there is {len(player_1.inventory)} amount of items in your inventory. {player_1.inventory}')
+        #  provides the location of the player
         elif(respond == 'location'):
             print(f'Your location is {player_1.current_room.name}')
+        #  provides the status of the player
+        elif(respond == 'status'):
+            print(f'Your current health is {player_1.health}, your current attack is {player_1.attack}')
         #  provides options for player to use
         elif(respond == 'help'):
             print('''
@@ -187,6 +294,7 @@ while game_on:
             You can type 'drop' to drop an item of your choice if you have it in your inventory.
             You can type 'inventory' to check what you currently have in your inventory.
             You can type 'location' if you want to confirm where you are.
+            You can type 'status' to show what is your current health / attack.
             ''')
         # else:
         #     print('The value you typed is incorrect???????????')

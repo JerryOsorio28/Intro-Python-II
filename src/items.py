@@ -12,3 +12,13 @@ class Items:
     def __repr__(self):
         return f'{self.name}'
 
+class Potion(Items):
+    def __init__(self, name, attack, health=30):
+        self.health = health
+        super().__init__(name, attack)
+    
+    def __repr__(self):
+        return self.health
+    
+
+
