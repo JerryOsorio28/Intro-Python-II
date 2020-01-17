@@ -13,4 +13,4 @@ class Room:
         self.w_to = None
 
     def __repr__(self):
-        return f'{self.name}, {self.description}'
+        return f'''\n{self.name}, {self.description}'''
