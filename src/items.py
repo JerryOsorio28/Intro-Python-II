@@ -17,8 +17,8 @@ class Potion(Items):
         self.health = health
         super().__init__(name, attack)
     
-    def __repr__(self):
-        return self.health
+    # def __repr__(self):
+    #     return self.health
     
 
 

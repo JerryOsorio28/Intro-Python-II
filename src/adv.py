@@ -41,11 +41,13 @@ items = {
 room['foyer'].items.append(str(items['sword']))
 room['overlook'].items.append(str(items['shield']))
 room['narrow'].items.append(str(items['torch']))
-room['narrow'].items.append(items['potion'])
+room['narrow'].items.append(str(items['potion']))
 room['foyer'].items.append(str(items['rock']))
 room['overlook'].items.append(str(items['rock']))
 room['narrow'].items.append(str(items['rock']))
 # room['treasure'].items.append(str(items['coin']))
+
+
 
 # Enemies in the game
 enemies = {
@@ -234,7 +236,7 @@ while game_on:
             # when searching for items, it checks if there is any items in the room first
             if(player_1.current_room.items):
                 # if there is, prompts the player what he wants to do with it
-                respond = input(f'Searching the room, You have found a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items}, no) ')
+                respond = input(f'Searching the room, You have found a {player_1.current_room.items}, would you like to pick it up? (grab {player_1.current_room.items} / no) ')
                 # for two or more words, it splits the string
                 split_respond = respond.split(' ')
                 if(split_respond[0] == 'grab'):
@@ -244,14 +246,16 @@ while game_on:
                         player_1.inventory.append(split_respond[1])
                         # increases player's attack when picking up sword
                         if(split_respond[1] == 'sword'):
+                            # runs the method to display which items was picked up.
+                            items[split_respond[1]].on_take()
                             player_1.attack += items[split_respond[1]].attack
+                            print(f'Your attack power increased by {items[split_respond[1]].attack}')
                         elif(split_respond[1] == 'potion'):
                             player_1.health += items[split_respond[1]].health 
+                            print(f"You've recover {items[split_respond[1]].health} points of your health.")
 
 ##IN THE FUTURE, MORE ADVANCE FEATURES LIKE ARMOR, SHIELD, HELMET, MANA.. WHEN PICKED UP, THE EFFECT THAT HAS ON THE CHARACTER CAN BE ADDED HERE##
 
-                        # runs the method to display which items was picked up.
-                        items[split_respond[1]].on_take()
                         # removes item from the room
                         player_1.current_room.items.remove(split_respond[1])
                 # elif(split_respond[0] == 'no'):
