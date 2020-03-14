@@ -2,16 +2,15 @@
 # description attributes.
 
 class Room:
-    def __init__(self, name, description):
+    def __init__(self, name, description, items=[], enemies=[]):
         self.name = name
         self.description = description
-        self.list = []
+        self.items = []
+        self.enemies = []
         self.n_to = None
         self.s_to = None
         self.e_to = None
         self.w_to = None
-    def __str__(self):
-        return f'{self.name}, {self.description}'
 
-# room = Room("Outside Cave Entrance", "North of you, the cave mount beckons")
-# print(room)
+    def __repr__(self):
+        return f'''\n{self.name}, {self.description}'''
